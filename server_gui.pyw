@@ -8,6 +8,8 @@
 [~] Version: 0.2
 """
 
+#--------------------------- NOT WORKING NOW ---------------------------#
+
 from Tkinter import * 
 import socket
 import os
