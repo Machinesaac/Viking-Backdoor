@@ -24,7 +24,6 @@ import re
 import uuid
 
 if os.name == "nt":
-    import ctypes
     from mss.windows import MSS as mss
     sct = mss()
 else:
