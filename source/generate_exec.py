@@ -33,15 +33,21 @@ def generate_exec(host, port, source, name):
 
 	#cmd = "pyinstaller --onefile --noconsole %s"%(name.split(".")[0])
 	cmd = subprocess.Popen(['pyinstaller', "--onefile", '--noconsole', name.split(".")[0]], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-	stdout, nothing = cmd.communicate()    
+	stdout, nothing = cmd.communicate()
 	file = "%s%sdist%s%s"%(os.getcwd(), os.sep, os.sep, name)
+	os.chdir("..")
+	logfile = open("executables"+os.sep+name+"-pyinstallerLogFile.txt", "w")
+	logfile.write(stdout)
+	logfile.flush()  
 	if os.path.exists(file) == True:
-		os.chdir("..")
 		shutil.copy2(file, "executables/"+name)
 		shutil.rmtree("exec")
 		print "\n[+] Exe file (Windows) ==> %s"%(os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 +os.sep+"executables"+os.sep+name)
 	else:
+		print "[!] Exe file couldn't create, check log file ==> %s"%(os.path.abspath(os.path.join(os.getcwd(), os.pardir))
++os.sep+"executables"+os.sep+logfile.name)
+		shutil.rmtree("exec")
 		sys.exit()
 
 def main():
