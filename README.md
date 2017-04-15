@@ -1,11 +1,40 @@
 # PyRAT
 
-# THIS FILE(README.md) WILL BE CORRECT ##
 PyRAT project started!
 
-Remote Administration Tool, written in Python
+Remote Administration Tool, written in Python for Windows
+
+Version = v1.5
 
 Coded By Black Viking
+
+### PyRAT Help
+	Commands:
+	    set HOST           : Set HOST value.
+	    set PORT           : Set PORT value.
+	    settings           : Show HOST and PORT values.
+	    start listener     : Start Listener.
+
+	Example:
+	    >>> PyRAT ==> set HOST 127.0.0.1
+	    >>> PyRAT ==> set PORT 8000
+	    >>> PyRAT ==> show listener
+	[~] HOST: 127.0.0.1
+	[~] PORT: 8000
+	===========================================================
+	    >>> PyRAT ==> start listener / start / run
+
+	#---- Generating exe files(Windows)
+
+	    >>> PyRAT ==> set HOST 127.0.0.1
+	    >>> PyRAT ==> set PORT 8000
+	    >>> PyRAT ==> show listener
+	[~] HOST: 127.0.0.1
+	[~] PORT: 8000
+	===========================================================
+	    >>> PyRAT ==> generate exec --name trojan.exe"""
+	    
+### Listener Help
 
 	Commands:
 		help()                  : Show this message.
@@ -22,11 +51,14 @@ Coded By Black Viking
 		:cls
 		:clear
 
-# GUI
-![alt tag](http://i.hizliresim.com/vXkm74.png)
+# Generate exec
+![alt tag](http://i.hizliresim.com/gqYElR.png)
+
+![alt tag](http://i.hizliresim.com/7q15mW.png)
 
 # Command Line
-![alt tag](http://i.hizliresim.com/j8ngmD.png)
+![alt tag](http://i.hizliresim.com/P0am3N.png)
 
-# Generate exec
-![alt tag](http://i.hizliresim.com/ojYr4q.png)
+# GUI 
+### NOT WORKING NOW
+![alt tag](http://i.hizliresim.com/vXkm74.png)
