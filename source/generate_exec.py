@@ -40,7 +40,7 @@ def generate_exec(host, port, source, name):
 		shutil.copy2(file, "executables/"+name)
 		shutil.rmtree("exec")
 		print "\n[+] Exe file (Windows) ==> %s"%(os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-+os.sep+"executables(Windows)"+os.sep+name)
++os.sep+"executables"+os.sep+name)
 	else:
 		sys.exit()
 
