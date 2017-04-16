@@ -2,9 +2,17 @@
 
 #### Viking Backdoor project started!
 
-Generate exe files to use for reverse connection :) Edit
+Viking Backdoor is MSF Backdoor like reverse connection tool.
 
-Coded By Black Viking
+## Features
+- File upload.
+- File download.
+- Taking screenshots.
+- Get Chrome's passwords.
+- Executing programs / commands in a new process.
+- Sending pop-up messages.
+- Get some info about target system.
+
 
 ### vkng Help
 	Commands:
@@ -32,6 +40,7 @@ Coded By Black Viking
 	===========================================================
 	    >>> vkng => generate exec --name trojan.exe"""
 	    
+
 ### Listener Help
 
 	Commands:
@@ -48,8 +57,3 @@ Coded By Black Viking
 		:dir ==> with ":"
 		:cls
 		:clear
-
-
-# GUI 
-### NOT WORKING NOW
-![alt tag](http://i.hizliresim.com/vXkm74.png)
