@@ -69,7 +69,7 @@ Example:
 
     >>> vkng => set HOST 127.0.0.1
     >>> vkng => set PORT 8000
-    >>> vkng => show listener
+    >>> vkng => show options
 [~] HOST: 127.0.0.1
 [~] PORT: 8000
 ===========================================================
@@ -93,7 +93,7 @@ def main():
         elif "set port" in vkng:
             port = int(vkng.split()[-1])
 
-        elif vkng == "show listener":
+        elif vkng == "show options":
             print "[~] Host: %s\n[~] Port: %s\n"%(host, port)+"="*60
 
         elif vkng == "start" or vkng == "run" or vkng == "start listener":
