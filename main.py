@@ -57,7 +57,7 @@ def main():
 		os.mkdir("executables")
 		print "[~] Directory created ==> 'executables'"
 
-	subprocess.Popen([sys.executable, 'PyRAT.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+	subprocess.Popen([sys.executable, 'vkng.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
 	sys.exit()
 
 if __name__ == "__main__":
