@@ -1,14 +1,12 @@
 # PyRAT
 
-PyRAT project started!
+## Viking Backdoor project!
 
-Remote Administration Tool, written in Python for Windows
-
-Version = v1.5
+Generate exe files to use for reverse connection :) Edit
 
 Coded By Black Viking
 
-### PyRAT Help
+### vkng Help
 	Commands:
 	    set HOST           : Set HOST value.
 	    set PORT           : Set PORT value.
@@ -51,13 +49,6 @@ Coded By Black Viking
 		:cls
 		:clear
 
-# Generate exec
-![alt tag](http://i.hizliresim.com/gqYElR.png)
-
-![alt tag](http://i.hizliresim.com/7q15mW.png)
-
-# Command Line
-![alt tag](http://i.hizliresim.com/P0am3N.png)
 
 # GUI 
 ### NOT WORKING NOW
