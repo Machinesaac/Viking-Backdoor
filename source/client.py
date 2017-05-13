@@ -266,7 +266,7 @@ def start():
         try:
             connect()
             main()
-        except
+        except:
             start()
 
 if __name__ == "__main__":
