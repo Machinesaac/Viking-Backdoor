@@ -101,7 +101,7 @@ def main():
                 if host != " " and port != " ":
                     name = vkng.split()[-1]
                     if name != "":
-                        subprocess.Popen([sys.executable, 'source/generate_exec.py', host, str(port), name], creationflags=CREATE_NEW_CONSOLE)
+                        subprocess.Popen([sys.executable, 'source/generate_exec.py', host, str(port), name], creationflags=subprocess.CREATE_NEW_CONSOLE)
                     else:
                         pass
                 else:

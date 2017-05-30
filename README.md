@@ -1,6 +1,6 @@
 # Viking Backdoor
 
-Viking Backdoor is MSF Backdoor like reverse connection tool.
+Viking Backdoor is a MSF Backdoor like reverse connection tool.
 
 ## Features
 - File upload.
@@ -11,6 +11,13 @@ Viking Backdoor is MSF Backdoor like reverse connection tool.
 - Sending pop-up messages.
 - Geting some info about target system.
 
+# Screenshots
+![alt tag](https://i.hizliresim.com/O0WNbD.png)
+
+![alt tag](https://i.hizliresim.com/7qOd3Y.png)
+
+#### Generating exe file(only on Windows!)
+![alt tag](https://i.hizliresim.com/z3WLZj.png)
 
 ### vkng Help
 	Commands:

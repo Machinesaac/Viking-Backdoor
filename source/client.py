@@ -24,8 +24,6 @@ import platform
 import threading
 import subprocess
 
-
-
 if os.name == "nt":
     try:
         from mss.windows import MSS as mss
