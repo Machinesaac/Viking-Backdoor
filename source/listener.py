@@ -9,16 +9,15 @@ __date__   = "15.04.2017"
 END_OF_FILE   = "(((END_OF_FILE)))"
 END_OF_STRING = "(((END_OF_STRING)))" 
 
-import socket
 import os
 import sys
+import socket
 import base64
 import sqlite3
 import urllib2
-import readline
+from time import *
 from colorama import init
 from colorama import Fore, Back, Style
-from time import *
 
 if os.name == "nt": import win32crypt
 
@@ -31,6 +30,7 @@ green   = Fore.GREEN
 white   = Fore.WHITE
 yellow  = Fore.YELLOW
 magenta = Fore.MAGENTA
+
 bright  = Style.BRIGHT
 
 startDir = os.getcwd()
@@ -235,6 +235,9 @@ def menu():
             except Exception as error:
                 bright + red + "Error: %s\n"%(error)
             menu()
+
+        elif command == "exit()":
+            sys.exit()
 
         elif command == "": 
             command = " "

