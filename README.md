@@ -9,7 +9,7 @@ Viking Backdoor is a MSF Backdoor like reverse connection tool.
 - Getting Chrome's passwords
 - Executing programs / commands in a new process.
 - Sending pop-up messages.
-- Geting some info about target system.
+- Getting some info about target system.
 
 # Screenshots
 ![alt tag](https://i.hizliresim.com/O0WNbD.png)
